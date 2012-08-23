@@ -1,0 +1,3 @@
+PCA9685: PWM/I²C treiber, future PCA9685PW,112
+IRF7303: dual n-Kanal FET, future IRF7303TRPBF
+	IRF7103: dual n-Kanal FET alternativ, gleiches package, weniger strom, future IRF7103PBF
