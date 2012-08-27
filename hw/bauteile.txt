@@ -1,3 +1,7 @@
 PCA9685: PWM/I²C treiber, future PCA9685PW,112
 IRF7303: dual n-Kanal FET, future IRF7303TRPBF
 	IRF7103: dual n-Kanal FET alternativ, gleiches package, weniger strom, future IRF7103PBF
+
+SN75176B: reichelt
+	
+	http://www.ebay.de/itm/30-St-2-pol-Schraubklemmen-f-Leiterpl-RM5-E0793-/110851546990?pt=LH_DefaultDomain_77&hash=item19cf445f6e ???
