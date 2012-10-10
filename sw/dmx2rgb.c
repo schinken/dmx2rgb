@@ -18,7 +18,7 @@ uint8_t* dmx_buf_front = dmx_buffers[ DMX_BUFFER_2 ];
 inline void dmx_switch_buffers() {
 
     // Check if current backbuffer is buffer 1, if yes, switch
-    if( dmx_buf_back == &dmx_buf_back[ DMX_BUFFER_1 ] ) {
+    if( dmx_buf_back == dmx_buf_back + DMX_BUFFER_1 ) {
         dmx_buf_back  = dmx_buffers[ DMX_BUFFER_1 ];
         dmx_buf_front = dmx_buffers[ DMX_BUFFER_2 ];
     } else {
