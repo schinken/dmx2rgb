@@ -14,23 +14,7 @@
 
 
 volatile uint8_t dmx_rx_complete = 0x00;
-
-uint8_t dmx_buffers[ DMX_BUFFERS ][ DMX_NUM_CHANNELS + 2 ];
-
-uint8_t* dmx_buf_back  = dmx_buffers[ DMX_BUFFER_1 ];
-uint8_t* dmx_buf_front = dmx_buffers[ DMX_BUFFER_2 ];
-
-inline void dmx_switch_buffers() {
-
-    // Check if current backbuffer is buffer 1, if yes, switch
-    if( dmx_buf_back == dmx_buf_back + DMX_BUFFER_1 ) {
-        dmx_buf_back  = dmx_buffers[ DMX_BUFFER_1 ];
-        dmx_buf_front = dmx_buffers[ DMX_BUFFER_2 ];
-    } else {
-        dmx_buf_back  = dmx_buffers[ DMX_BUFFER_2 ];
-        dmx_buf_front = dmx_buffers[ DMX_BUFFER_1 ];
-    }
-}
+volatile uint8_t dmx_buf_back[ DMX_NUM_CHANNELS + 2];
 
 uint8_t  dmx_valid = 0;
 uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
@@ -54,8 +38,6 @@ ISR( USART_RX_vect ){
 			dmx_valid = 0;
 		}
 
-
-//        dmx_switch_buffers();
         return;
     }
 
@@ -71,7 +53,6 @@ ISR( USART_RX_vect ){
                 dmx_rx_complete = 1;
             }
         }
-
 
         dmx_rx_cnt++;
     }
@@ -96,7 +77,7 @@ int main (void) {
 
         if( dmx_rx_complete ) {
 
-            if( dmx_buf_back[1] == 42 ) {
+            if( dmx_buf_back[1] == 255 ) {
                 PORTB &= ~0x01;    
             } else {
                 PORTB |= 0x01;
