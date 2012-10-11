@@ -27,7 +27,7 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
   3320, 3356, 3393, 3430, 3467, 3504, 3542, 3579, 3617, 3656, 3694, 3733, 3773, 3812, 3852, 3892,
   3932, 3973, 4013, 4055, 4095 };
 
-#define PWM_TO_CIEL(x) (pgm_read_byte(CIEL12[x]))
+#define PWM_TO_CIEL(x) (pgm_read_word(CIEL12[x]))
 /**
  * Initialize and Reset PCA9685 Chip
  */
