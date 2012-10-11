@@ -66,7 +66,7 @@ inline void pca9685_led_off( uint8_t i2c_addr, uint8_t led ) {
  */
 
 inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity ) {
-    pca9685_led_write( i2c_addr, led, CIEL12[ itensity ] );
+    pca9685_led_write( i2c_addr, led, CIEL12[ intensity ] );
 }
 
 /**
@@ -96,6 +96,6 @@ void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
 void pca9685_write_register( uint8_t i2c_addr, uint8_t register_addr, uint8_t value ) {
     i2c_start( i2c_addr );
     i2c_write( register_addr );
-    i2c_write( data );
+    i2c_write( value );
     i2c_stop();
 }
