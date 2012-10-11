@@ -1,5 +1,5 @@
 PRG            = dmx2rgb
-OBJ            = dmx2rgb.o
+OBJ            = dmx2rgb.o twimaster.o pca9685.o
 #MCU_TARGET     = at90s2313
 #MCU_TARGET     = at90s2333
 #MCU_TARGET     = at90s4414
