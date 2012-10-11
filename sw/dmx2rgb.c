@@ -79,6 +79,7 @@ int main (void) {
     pca9685_init( PCA9685_CHIP_1 );
     pca9685_init( PCA9685_CHIP_2 );
     pca9685_init( PCA9685_CHIP_3 );
+    asm("NOP");
 
     while(1) {  
 
@@ -87,13 +88,12 @@ int main (void) {
             for( led = 0; led < 16; led++ ) {
                 pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ] );
             }
-            /*
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_2, led, dmx_buf_back[ led + 1 ] );
+                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ] );
             }
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_3, led, dmx_buf_back[ led + 1 ] );
-            }*/
+                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ] );
+            }
         }
   
     }                         
