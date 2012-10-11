@@ -1,4 +1,5 @@
 #include <util/delay.h>
+#include <avr/pgmspace.h>
 #include "pca9685.h"
 
 /**
@@ -10,7 +11,7 @@
  * 
 */
 
-const uint16_t CIEL12[] = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21, 23, 25, 27, 28, 30,
+const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21, 23, 25, 27, 28, 30,
   32, 34, 36, 37, 39, 41, 43, 45, 47, 49, 52, 54, 56, 59, 61, 64, 66, 69, 72, 75, 77, 80, 83, 87,
   90, 93, 97, 100, 103, 107, 111, 115, 118, 122, 126, 131, 135, 139, 144, 148, 153, 157, 162, 167,
   172, 177, 182, 187, 193, 198, 204, 209, 215, 221, 227, 233, 239, 246, 252, 259, 265, 272, 279,
@@ -26,6 +27,7 @@ const uint16_t CIEL12[] = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21, 23, 25
   3320, 3356, 3393, 3430, 3467, 3504, 3542, 3579, 3617, 3656, 3694, 3733, 3773, 3812, 3852, 3892,
   3932, 3973, 4013, 4055, 4095 };
 
+#define PWM_TO_CIEL(x) (pgm_read_byte(CIEL12[x]))
 /**
  * Initialize and Reset PCA9685 Chip
  */
@@ -66,7 +68,7 @@ inline void pca9685_led_off( uint8_t i2c_addr, uint8_t led ) {
  */
 
 inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity ) {
-    pca9685_led_write( i2c_addr, led, CIEL12[ intensity ] );
+    pca9685_led_write( i2c_addr, led, PWM_TO_CIEL( intensity ) );
 }
 
 /**
