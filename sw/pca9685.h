@@ -1,9 +1,32 @@
 #ifndef PCA9685_HEADER
 #define PCA9685_HEADER
 
-#define PCA9685_MODE1 0x00
-#define PCA9685_MODE2 0x01
-#define PCA9685_LED0  0x06
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#define PCA9685_MODE1   0x00
+#define PCA9685_MODE2   0x01
+#define PCA9685_LED0    0x06
+
+#define PCA9685_WRITE   0x00
+#define PCA9685_READ    0x01
+
+/* MODE1 bits */
+#define PCA9685_RESTART 0x80
+#define PCA9685_EXTCLK  0x40
+#define PCA9685_AI      0x20
+#define PCA9685_SLEEP   0x10
+#define PCA9685_SUB1    0x08
+#define PCA9685_SUB2    0x04
+#define PCA9685_SUB3    0x02
+#define PCA9685_ALLCALL 0x01
+
+/* MODE2 bits */
+#define PCA9685_INVRT   0x10
+#define PCA9685_OCH     0x08
+#define PCA9685_OUTDRV  0x04
+#define PCA9685_OUTNE1  0x02
+#define PCA9685_OUTNE0  0x01
 
 void pca9685_init( uint8_t i2c_addr );
 inline void pca9685_led_on( uint8_t i2c_addr, uint8_t led );

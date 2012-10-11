@@ -1,6 +1,8 @@
+#include "dmx2rgb.h"
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include "pca9685.h"
+#include "i2cmaster.h"
 
 /**
  * CIEL Lookup table, copied from https://github.com/brunnels/PCA9685/blob/master/PCA9685.cpp
@@ -27,24 +29,18 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
   3320, 3356, 3393, 3430, 3467, 3504, 3542, 3579, 3617, 3656, 3694, 3733, 3773, 3812, 3852, 3892,
   3932, 3973, 4013, 4055, 4095 };
 
-#define PWM_TO_CIEL(x) (pgm_read_word(CIEL12[x]))
+#define PWM_TO_CIEL(x) (pgm_read_word(&CIEL12[x]))
 /**
  * Initialize and Reset PCA9685 Chip
  */
 
 void pca9685_init( uint8_t i2c_addr ) {
  
-    // Reset chip
     _delay_ms(1);
-    pca9685_write_register( i2c_addr, PCA9685_MODE1, 0x01 );
+    pca9685_write_register( i2c_addr, PCA9685_MODE1, 0x06 );
     _delay_ms(1);
 
-    // Enabling auto increment and allcall
-    pca9685_write_register( i2c_addr, PCA9685_MODE1, 0xA1 );
-
-
-    pca9685_write_register( i2c_addr, PCA9685_MODE2, 0x10 );
-
+    pca9685_write_register(i2c_addr, PCA9685_MODE1, 0b00100001 );
 }
 
 /**
@@ -77,16 +73,17 @@ inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity ) 
 
 void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
     
-    i2c_start( i2c_addr );
+    i2c_start( i2c_addr + PCA9685_WRITE );
     i2c_write( PCA9685_LED0 + 4*led );
 
     // Write LED ON
+    i2c_write( 0x00 );
+    i2c_write( 0x00 );
+
+    // Write LED Off
     i2c_write( (uint8_t) (value & 0xff) );
     i2c_write( (uint8_t) (value >> 8  ) );
 
-    // Write LED Off
-    i2c_write( 0x00 );
-    i2c_write( 0x00 );
 
     i2c_stop();
 }
@@ -96,7 +93,7 @@ void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
  */
 
 void pca9685_write_register( uint8_t i2c_addr, uint8_t register_addr, uint8_t value ) {
-    i2c_start( i2c_addr );
+    i2c_start( i2c_addr + PCA9685_WRITE );
     i2c_write( register_addr );
     i2c_write( value );
     i2c_stop();
