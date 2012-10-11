@@ -1,16 +1,9 @@
+#include "dmx2rgb.h"
+#include "pca9685.h"
+#include "i2cmaster.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
-#define DMX_BAUD 250000
-
-#define DMX_BUFFERS         2
-#define DMX_BUFFER_1        0
-#define DMX_BUFFER_2        1
-
-#define DMX_CHANNEL         1   // DMX Channel
-#define DMX_NUM_CHANNELS    10   // How many channels? 
-
-#define F_CPU 16000000
+#include <util/delay.h>
 
 
 volatile uint8_t dmx_rx_complete = 0x00;
@@ -18,6 +11,11 @@ volatile uint8_t dmx_buf_back[ DMX_NUM_CHANNELS + 2];
 
 uint8_t  dmx_valid = 0;
 uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
+
+/*
+ * LED Mapping, because the wires are twisted :(
+ */
+uint8_t led_map[] = { 6, 7, 4, 5, 2, 3, 0, 1, 9, 8, 11, 10, 13, 12, 15, 14 };
 
 ISR( USART_RX_vect ){
 
@@ -71,31 +69,35 @@ int main (void) {
     DDRB  = (1 << PIN0) | (1 << PIN1 ) | (1 << PIN2);
     PORTB = (1 << PIN0) | (1 << PIN1 ) | (1 << PIN2);
 
+    // Data direction for LED ENABLE
+    DDRD  |= (1 << PIN3);
+    PORTD &= ~(1<<PIN3);
+
     sei();
+    i2c_init();
+
+    pca9685_init( PCA9685_CHIP_1 );
+    pca9685_init( PCA9685_CHIP_2 );
+    pca9685_init( PCA9685_CHIP_3 );
 
     while(1) {  
 
         if( dmx_rx_complete ) {
-
-            if( dmx_buf_back[1] == 255 ) {
-                PORTB &= ~0x01;    
-            } else {
-                PORTB |= 0x01;
+            uint8_t led = 0;
+            for( led = 0; led < 16; led++ ) {
+                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ] );
             }
-
-            if( dmx_buf_back[2] == 42 ) {
-                PORTB &= ~0x02;    
-            } else {
-                PORTB |= 0x02;
+            /*
+            for( led = 0; led < 16; led++ ) {
+                pca9685_led_pwm( PCA9685_CHIP_2, led, dmx_buf_back[ led + 1 ] );
             }
-
-            if( dmx_buf_back[3] == 42 ) {
-                PORTB &= ~0x04;    
-            } else {
-                PORTB |= 0x04;
-            }
+            for( led = 0; led < 16; led++ ) {
+                pca9685_led_pwm( PCA9685_CHIP_3, led, dmx_buf_back[ led + 1 ] );
+            }*/
         }
+  
     }                         
  
     return 0;                 
+
 }
