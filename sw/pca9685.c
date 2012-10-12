@@ -72,7 +72,10 @@ inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity ) 
  */
 
 void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
-    
+ 
+    // Toggle second LED on i2c write
+    PORTB ^= 0x02;
+
     i2c_start( i2c_addr + PCA9685_WRITE );
     i2c_write( PCA9685_LED0 + 4*led );
 

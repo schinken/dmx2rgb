@@ -32,6 +32,9 @@ ISR( USART_RX_vect ){
 		if(tmp == 0) {
 			dmx_valid = 1;
             dmx_rx_cnt++;
+
+            // Toggle LED 1 if frame begins
+            PORTB ^= 0x01;
 		}else{
 			dmx_valid = 0;
 		}
@@ -79,7 +82,9 @@ int main (void) {
     pca9685_init( PCA9685_CHIP_1 );
     pca9685_init( PCA9685_CHIP_2 );
     pca9685_init( PCA9685_CHIP_3 );
-    asm("NOP");
+
+    // Switch on third LED to display init
+    PORTB &= ~0x04;
 
     while(1) {  
 
