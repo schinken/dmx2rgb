@@ -30,6 +30,8 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
   3932, 3973, 4013, 4055, 4095 };
 
 #define PWM_TO_CIEL(x) (pgm_read_word(&CIEL12[x]))
+#define HIGHBYTE(x) ( (uint8_t) ( x >> 8 ) )
+#define LOWBYTE(x)  ( (uint8_t) ( x & 0xFF ) )
 /**
  * Initialize and Reset PCA9685 Chip
  */
@@ -56,7 +58,7 @@ inline void pca9685_led_on( uint8_t i2c_addr, uint8_t led ) {
  */
 
 inline void pca9685_led_off( uint8_t i2c_addr, uint8_t led ) {
-    pca9685_led_pwm( i2c_addr, led, 0);  
+    pca9685_led_pwm( i2c_addr, led, 0 );  
 }
 
 /**
@@ -84,8 +86,8 @@ void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
     i2c_write( 0x00 );
 
     // Write LED Off
-    i2c_write( (uint8_t) (value & 0xff) );
-    i2c_write( (uint8_t) (value >> 8  ) );
+    i2c_write( LOWBYTE( value ) );
+    i2c_write( HIGHBYTE( value ) );
 
 
     i2c_stop();

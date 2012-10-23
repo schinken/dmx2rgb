@@ -90,14 +90,15 @@ int main (void) {
 
         if( dmx_rx_complete ) {
             uint8_t led = 0;
+
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ] );
+                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ], jitter );
             }
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ] );
+                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ], jitter );
             }
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ] );
+                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ], jitter );
             }
         }
   
