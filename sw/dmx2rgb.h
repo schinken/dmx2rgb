@@ -6,7 +6,11 @@
 #define DMX_BUFFER_2        1
 
 #define DMX_CHANNEL         200   // DMX Channel
+<<<<<<< HEAD
 #define DMX_NUM_CHANNELS    48   // How many channels? 
+=======
+#define DMX_NUM_CHANNELS    48    // How many channels? 
+>>>>>>> 6697ec05cdf35df2f3bf018414598959b6628db1
 
 #define F_CPU 16000000
 
