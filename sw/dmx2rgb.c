@@ -92,13 +92,13 @@ int main (void) {
             uint8_t led = 0;
 
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ], jitter );
+                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ] );
             }
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ], jitter );
+                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ] );
             }
             for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ], jitter );
+                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ] );
             }
         }
   

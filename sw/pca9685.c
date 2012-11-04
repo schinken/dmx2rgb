@@ -93,15 +93,8 @@ void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
 
 
     // Write LED Off
-<<<<<<< HEAD
-    i2c_write( (uint8_t) (value & 0xff) );
-    i2c_write( (uint8_t) (value >> 8  ) );
-    
-=======
     i2c_write( LOWBYTE( value ) );
     i2c_write( HIGHBYTE( value ) );
-
->>>>>>> 6697ec05cdf35df2f3bf018414598959b6628db1
 
     i2c_stop();
 }
