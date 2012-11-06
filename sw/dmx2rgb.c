@@ -79,9 +79,9 @@ int main (void) {
     sei();
     i2c_init();
 
-    pca9685_init( PCA9685_CHIP_1 );
-    pca9685_init( PCA9685_CHIP_2 );
-    pca9685_init( PCA9685_CHIP_3 );
+    pca9685_init( PCA9685_CHIP_1, PCA9685_FREQUENCY(1200UL) );
+    pca9685_init( PCA9685_CHIP_2, PCA9685_FREQUENCY(950UL) );
+    pca9685_init( PCA9685_CHIP_3, PCA9685_FREQUENCY(650UL) );
 
     // Switch on third LED to display init
     PORTB &= ~0x04;

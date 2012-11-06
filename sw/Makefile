@@ -15,7 +15,7 @@ OBJ            = dmx2rgb.o twimaster.o pca9685.o
 #MCU_TARGET     = atmega164p
 #MCU_TARGET     = atmega165
 #MCU_TARGET     = atmega165p
-MCU_TARGET     = atmega168p
+MCU_TARGET     = atmega168
 #MCU_TARGET     = atmega169
 #MCU_TARGET     = atmega169p
 #MCU_TARGET     = atmega32
@@ -86,6 +86,7 @@ AVRDUDE_FLAGS = -p $(MCU_TARGET) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
 AVRDUDE_FLAGS += $(AVRDUDE_VERBOSE)
 AVRDUDE_FLAGS += $(AVRDUDE_ERASE_COUNTER)
+AVRDUDE_FLAGS += -F
 #AVRDUDE_FLAGS += -b 25000
 
 MSG_SIZE_BEFORE = Size before: 

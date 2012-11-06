@@ -4,10 +4,16 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+/* input x as Hz */
+#define PCA9685_FREQUENCY(x) ((25000000UL/(4096UL*x))-1)
+
+/* registers */
 #define PCA9685_MODE1   0x00
 #define PCA9685_MODE2   0x01
 #define PCA9685_LED0    0x06
+#define PCA9685_PRESCALER	0xFE
 
+/* commands */
 #define PCA9685_WRITE   0x00
 #define PCA9685_READ    0x01
 
@@ -28,7 +34,7 @@
 #define PCA9685_OUTNE1  0x02
 #define PCA9685_OUTNE0  0x01
 
-void pca9685_init( uint8_t i2c_addr );
+void pca9685_init( uint8_t i2c_addr, uint8_t frequency );
 inline void pca9685_led_on( uint8_t i2c_addr, uint8_t led );
 inline void pca9685_led_off( uint8_t i2c_addr, uint8_t led );
 inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity );
