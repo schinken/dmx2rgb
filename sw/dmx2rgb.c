@@ -29,15 +29,15 @@ ISR( USART_RX_vect ){
 
         dmx_buf_back[0] = tmp;
 
-		if(tmp == 0) {
-			dmx_valid = 1;
+        if(tmp == 0) {
+            dmx_valid = 1;
             dmx_rx_cnt++;
 
             // Toggle LED 1 if frame begins
             PORTB ^= 0x01;
-		}else{
-			dmx_valid = 0;
-		}
+        }else{
+            dmx_valid = 0;
+        }
 
         return;
     }
