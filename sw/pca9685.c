@@ -33,17 +33,26 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
 #define PWM_TO_CIEL(x) (pgm_read_word(&CIEL12[x]))
 #define HIGHBYTE(x) ( (uint8_t) ( x >> 8 ) )
 #define LOWBYTE(x)  ( (uint8_t) ( x & 0xFF ) )
+
+
+
 /**
  * Initialize and Reset PCA9685 Chip
  */
 
-void pca9685_init( uint8_t i2c_addr ) {
+void pca9685_init( uint8_t i2c_addr, uint8_t frequency ) {
  
+	/* set frequency */
+	pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_SLEEP );
+	pca9685_write_register(i2c_addr, PCA9685_PRESCALER, frequency);
+    
     _delay_ms(1);
-    pca9685_write_register( i2c_addr, PCA9685_MODE1, 0x06 );
+    pca9685_write_register( i2c_addr, PCA9685_MODE1, PCA9685_SUB2 | PCA9685_SUB3 /* 0x06 */);
     _delay_ms(1);
 
-    pca9685_write_register(i2c_addr, PCA9685_MODE1, 0b00100001 );
+    pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_AI | PCA9685_ALLCALL /* 0x21 */);
+    
+    
 }
 
 /**
