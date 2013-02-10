@@ -13,7 +13,7 @@
  * 
 */
 
-const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21, 23, 25, 27, 28, 30,
+const uint16_t CIEL12[] PROGMEM = {0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21, 23, 25, 27, 28, 30,
   32, 34, 36, 37, 39, 41, 43, 45, 47, 49, 52, 54, 56, 59, 61, 64, 66, 69, 72, 75, 77, 80, 83, 87,
   90, 93, 97, 100, 103, 107, 111, 115, 118, 122, 126, 131, 135, 139, 144, 148, 153, 157, 162, 167,
   172, 177, 182, 187, 193, 198, 204, 209, 215, 221, 227, 233, 239, 246, 252, 259, 265, 272, 279,
@@ -27,12 +27,12 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
   2293, 2322, 2350, 2379, 2408, 2437, 2467, 2497, 2527, 2557, 2587, 2618, 2649, 2680, 2712, 2743,
   2775, 2807, 2840, 2872, 2905, 2938, 2972, 3006, 3039, 3074, 3108, 3143, 3178, 3213, 3248, 3284,
   3320, 3356, 3393, 3430, 3467, 3504, 3542, 3579, 3617, 3656, 3694, 3733, 3773, 3812, 3852, 3892,
-  3932, 3973, 4013, 4055, 4095 };
+  3932, 3973, 4013, 4055, 4095};
 
 #define PWM_MAX 4095
 #define PWM_TO_CIEL(x) (pgm_read_word(&CIEL12[x]))
-#define HIGHBYTE(x) ( (uint8_t) ( x >> 8 ) )
-#define LOWBYTE(x)  ( (uint8_t) ( x & 0xFF ) )
+#define HIGHBYTE(x) ( (uint8_t) (x >> 8 ))
+#define LOWBYTE(x)  ( (uint8_t) (x & 0xFF) )
 
 
 
@@ -40,14 +40,14 @@ const uint16_t CIEL12[] PROGMEM = { 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 18, 20, 21
  * Initialize and Reset PCA9685 Chip
  */
 
-void pca9685_init( uint8_t i2c_addr, uint8_t frequency ) {
+void pca9685_init(uint8_t i2c_addr, uint8_t frequency) {
  
 	/* set frequency */
-	pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_SLEEP );
+	pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_SLEEP);
 	pca9685_write_register(i2c_addr, PCA9685_PRESCALER, frequency);
     
     _delay_ms(1);
-    pca9685_write_register( i2c_addr, PCA9685_MODE1, PCA9685_SUB2 | PCA9685_SUB3 /* 0x06 */);
+    pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_SUB2 | PCA9685_SUB3 /* 0x06 */);
     _delay_ms(1);
 
     pca9685_write_register(i2c_addr, PCA9685_MODE1, PCA9685_AI | PCA9685_ALLCALL /* 0x21 */);
@@ -59,51 +59,47 @@ void pca9685_init( uint8_t i2c_addr, uint8_t frequency ) {
  * Switch LED On
  */
 
-inline void pca9685_led_on( uint8_t i2c_addr, uint8_t led ) {
-    pca9685_led_pwm( i2c_addr, led, 255 );   
+inline void pca9685_led_on(uint8_t i2c_addr, uint8_t led) {
+    pca9685_led_pwm(i2c_addr, led, 255);   
 }
 
 /**
  * Switch LED Off
  */
 
-inline void pca9685_led_off( uint8_t i2c_addr, uint8_t led ) {
-    pca9685_led_pwm( i2c_addr, led, 0 );  
+inline void pca9685_led_off(uint8_t i2c_addr, uint8_t led) {
+    pca9685_led_pwm(i2c_addr, led, 0);  
 }
 
 /**
  * Set LED with an intensity between 0 - 255
  */
 
-inline void pca9685_led_pwm( uint8_t i2c_addr, uint8_t led, uint8_t intensity ) {
-    pca9685_led_write( i2c_addr, led, PWM_TO_CIEL( intensity ) );
+inline void pca9685_led_pwm(uint8_t i2c_addr, uint8_t led, uint8_t intensity) {
+    pca9685_led_write(i2c_addr, led, PWM_TO_CIEL(intensity));
 }
 
 /**
  * Write LED Registers
  */
 
-void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
+void pca9685_led_write(uint8_t i2c_addr, uint8_t led, uint16_t value) {
  
     // Toggle second LED on i2c write
     PORTB ^= 0x02;
 
-    i2c_start( i2c_addr + PCA9685_WRITE );
-    i2c_write( PCA9685_LED0 + 4*led );
+    i2c_start(i2c_addr + PCA9685_WRITE);
+    i2c_write(PCA9685_LED0 + 4*led);
 
     uint16_t phase = (PWM_MAX-value)-1;
 
 
-    i2c_write( 0x00 );
-    i2c_write( 0x00 );
-    // Write LED ON
-//    i2c_write( (uint8_t) (phase & 0xFF ) );
-//    i2c_write( (uint8_t) (phase >> 8   ) );
-
+    i2c_write(0x00);
+    i2c_write(0x00);
 
     // Write LED Off
-    i2c_write( LOWBYTE( value ) );
-    i2c_write( HIGHBYTE( value ) );
+    i2c_write(LOWBYTE(value));
+    i2c_write(HIGHBYTE(value));
 
     i2c_stop();
 }
@@ -112,9 +108,9 @@ void pca9685_led_write( uint8_t i2c_addr, uint8_t led, uint16_t value ) {
  * Write PCA9685 Register
  */
 
-void pca9685_write_register( uint8_t i2c_addr, uint8_t register_addr, uint8_t value ) {
-    i2c_start( i2c_addr + PCA9685_WRITE );
-    i2c_write( register_addr );
-    i2c_write( value );
+void pca9685_write_register(uint8_t i2c_addr, uint8_t register_addr, uint8_t value) {
+    i2c_start(i2c_addr + PCA9685_WRITE);
+    i2c_write(register_addr);
+    i2c_write(value);
     i2c_stop();
 }

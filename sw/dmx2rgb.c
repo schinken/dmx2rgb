@@ -7,7 +7,7 @@
 
 
 volatile uint8_t dmx_rx_complete = 0x00;
-volatile uint8_t dmx_buf_back[ DMX_NUM_CHANNELS + 2];
+volatile uint8_t dmx_buf_back[DMX_NUM_CHANNELS + 2];
 
 uint8_t  dmx_valid = 0;
 uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
@@ -15,14 +15,14 @@ uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
 /*
  * LED Mapping, because the wires are twisted :(
  */
-uint8_t led_map[] = { 6, 7, 4, 5, 2, 3, 0, 1, 9, 8, 11, 10, 13, 12, 15, 14 };
+uint8_t led_map[] = {6, 7, 4, 5, 2, 3, 0, 1, 9, 8, 11, 10, 13, 12, 15, 14};
 
-ISR( USART_RX_vect ){
+ISR(USART_RX_vect){
 
     uint8_t tmp = UDR0;
 
     // Check if stopbit is set - new package begins
-    if ( UCSR0A & (1 << FE0) ) {
+    if(UCSR0A & (1 << FE0)) {
  
         dmx_rx_cnt = 0;
         dmx_rx_complete = 0;
@@ -42,15 +42,15 @@ ISR( USART_RX_vect ){
         return;
     }
 
-    if( dmx_valid ) {
+    if(dmx_valid) {
 
         // Check if we are in range
-        if( dmx_rx_cnt >= DMX_CHANNEL && dmx_rx_cnt <= (DMX_CHANNEL + DMX_NUM_CHANNELS + 1 ) ){
+        if(dmx_rx_cnt >= DMX_CHANNEL && dmx_rx_cnt <= (DMX_CHANNEL + DMX_NUM_CHANNELS + 1 )){
 
-            dmx_buf_back[ dmx_rx_cnt - DMX_CHANNEL +1 ] = tmp;
+            dmx_buf_back[dmx_rx_cnt - DMX_CHANNEL+1] = tmp;
 
             // If we've reached all channels we need, mark current package as completed
-            if( dmx_rx_cnt == (DMX_CHANNEL + DMX_NUM_CHANNELS) ) {
+            if(dmx_rx_cnt == (DMX_CHANNEL + DMX_NUM_CHANNELS)) {
                 dmx_rx_complete = 1;
             }
         }
@@ -79,26 +79,26 @@ int main (void) {
     sei();
     i2c_init();
 
-    pca9685_init( PCA9685_CHIP_1, PCA9685_FREQUENCY(1200UL) );
-    pca9685_init( PCA9685_CHIP_2, PCA9685_FREQUENCY(950UL) );
-    pca9685_init( PCA9685_CHIP_3, PCA9685_FREQUENCY(650UL) );
+    pca9685_init(PCA9685_CHIP_1, PCA9685_FREQUENCY(1200UL));
+    pca9685_init(PCA9685_CHIP_2, PCA9685_FREQUENCY(950UL));
+    pca9685_init(PCA9685_CHIP_3, PCA9685_FREQUENCY(650UL));
 
     // Switch on third LED to display init
     PORTB &= ~0x04;
 
     while(1) {  
 
-        if( dmx_rx_complete ) {
+        if(dmx_rx_complete) {
             uint8_t led = 0;
 
-            for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_1, led_map[led], dmx_buf_back[ led + 1 ] );
+            for(led = 0; led < 16; led++) {
+                pca9685_led_pwm(PCA9685_CHIP_1, led_map[led], dmx_buf_back[led + 1]);
             }
-            for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_2, led_map[led], dmx_buf_back[ led + 1 + 16 ] );
+            for(led = 0; led < 16; led++) {
+                pca9685_led_pwm(PCA9685_CHIP_2, led_map[led], dmx_buf_back[led + 1 + 16]);
             }
-            for( led = 0; led < 16; led++ ) {
-                pca9685_led_pwm( PCA9685_CHIP_3, led_map[led], dmx_buf_back[ led + 1 + 32 ] );
+            for(led = 0; led < 16; led++) {
+                pca9685_led_pwm(PCA9685_CHIP_3, led_map[led], dmx_buf_back[led + 1 + 32]);
             }
         }
   
