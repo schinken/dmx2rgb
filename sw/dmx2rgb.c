@@ -17,45 +17,56 @@ uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
  */
 uint8_t led_map[] = {6, 7, 4, 5, 2, 3, 0, 1, 9, 8, 11, 10, 13, 12, 15, 14};
 
+#define SERIAL_FLOOR 0
+#define SERIAL_HEAD1 1
+#define SERIAL_DATA  2
+
+volatile uint8_t stage = SERIAL_FLOOR;
+
 ISR(USART_RX_vect){
 
     uint8_t tmp = UDR0;
 
-    // Check if stopbit is set - new package begins
-    if(UCSR0A & (1 << FE0)) {
- 
-        dmx_rx_cnt = 0;
-        dmx_rx_complete = 0;
+    switch(stage) {
+        case SERIAL_FLOOR:
+            PORTB |= 0x01;
+            dmx_rx_cnt = 0;
 
-        dmx_buf_back[0] = tmp;
+            if(tmp == 0x55) {
+                stage = SERIAL_HEAD1;
+            }
+            break;
 
-        if(tmp == 0) {
-            dmx_valid = 1;
+        case SERIAL_HEAD1:
+            if(tmp == 0xAA) {
+                stage = SERIAL_DATA;
+            } else {
+                stage = SERIAL_FLOOR;
+            }
+            break;
+
+        case SERIAL_DATA:
+            PORTB &= ~0x01;
+
+            if(dmx_rx_cnt >= DMX_CHANNEL && dmx_rx_cnt <= (DMX_CHANNEL + DMX_NUM_CHANNELS + 1 )){
+
+
+                dmx_buf_back[dmx_rx_cnt - DMX_CHANNEL+1] = tmp;
+
+                // If we've reached all channels we need, mark current package as completed
+                if(dmx_rx_cnt == (DMX_CHANNEL + DMX_NUM_CHANNELS)) {
+                    dmx_rx_complete = 1;
+                }
+            }
+
             dmx_rx_cnt++;
 
-            // Toggle LED 1 if frame begins
-            PORTB ^= 0x01;
-        }else{
-            dmx_valid = 0;
-        }
-
-        return;
-    }
-
-    if(dmx_valid) {
-
-        // Check if we are in range
-        if(dmx_rx_cnt >= DMX_CHANNEL && dmx_rx_cnt <= (DMX_CHANNEL + DMX_NUM_CHANNELS + 1 )){
-
-            dmx_buf_back[dmx_rx_cnt - DMX_CHANNEL+1] = tmp;
-
-            // If we've reached all channels we need, mark current package as completed
-            if(dmx_rx_cnt == (DMX_CHANNEL + DMX_NUM_CHANNELS)) {
-                dmx_rx_complete = 1;
+            if(dmx_rx_cnt >= 512) {
+                stage = SERIAL_FLOOR;
             }
-        }
 
-        dmx_rx_cnt++;
+            break;
+
     }
 
 }
@@ -87,6 +98,10 @@ int main (void) {
     PORTB &= ~0x04;
 
     while(1) {  
+
+//        dmx_rx_complete = 1;
+//        dmx_buf_back[1] = 255;
+//        dmx_buf_back[2] = 128;
 
         if(dmx_rx_complete) {
             uint8_t led = 0;

@@ -1,14 +1,14 @@
 
-#define DMX_BAUD 250000
+#define DMX_BAUD 115200
 
 #define DMX_BUFFERS         2
 #define DMX_BUFFER_1        0
 #define DMX_BUFFER_2        1
 
-#define DMX_CHANNEL         200   // DMX Channel
+#define DMX_CHANNEL         1   // DMX Channel
 #define DMX_NUM_CHANNELS    48    // How many channels? 
 
-#define F_CPU 16000000
+#define F_CPU 18432000
 
 #define PCA9685_CHIP_1 0b10000010
 #define PCA9685_CHIP_2 0b10000110
