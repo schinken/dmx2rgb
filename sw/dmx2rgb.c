@@ -62,7 +62,7 @@ ISR(USART_RX_vect){
 
 }
 
-int main (void) {            
+int main (void) {
 
 
     // INIT DMX
@@ -92,10 +92,6 @@ int main (void) {
 
     while(1) {  
 
-//        dmx_rx_complete = 1;
-//        dmx_buf_back[1] = 255;
-//        dmx_buf_back[2] = 128;
-
         if(dmx_rx_complete) {
             uint8_t led = 0;
 
@@ -110,8 +106,8 @@ int main (void) {
             }
         }
   
-    }                         
+    }
  
-    return 0;                 
+    return 0;
 
 }
