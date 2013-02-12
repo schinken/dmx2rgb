@@ -29,7 +29,7 @@ ISR(USART_RX_vect){
 
     switch(stage) {
         case SERIAL_FLOOR:
-            PORTB |= 0x01;
+            PORTB ^= 0x01;
             dmx_rx_cnt = 0;
 
             if(tmp == 0x55) {
@@ -46,7 +46,6 @@ ISR(USART_RX_vect){
             break;
 
         case SERIAL_DATA:
-            PORTB &= ~0x01;
 
             dmx_buf_back[dmx_rx_cnt+1] = tmp;
 
@@ -72,11 +71,7 @@ int main (void) {
 
     UBRR0H = UBRRH_VALUE;
     UBRR0L = UBRRL_VALUE;
-    
-//UBRR0  = (F_CPU / (DMX_BAUD * 16L) - 1);
-    //UBRR0 = ((F_CPU+DMX_BAUD*8)/(DMX_BAUD*16)-1);
 
- 
     // INIT PORT PINS
     DDRB  = (1 << PIN0) | (1 << PIN1 ) | (1 << PIN2);
     PORTB = (1 << PIN0) | (1 << PIN1 ) | (1 << PIN2);
