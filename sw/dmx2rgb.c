@@ -4,7 +4,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
+#include <util/setbaud.h>
 
 volatile uint8_t dmx_rx_complete = 0x00;
 volatile uint8_t dmx_buf_back[DMX_NUM_CHANNELS + 2];
@@ -69,7 +69,13 @@ int main (void) {
     // INIT DMX
     UCSR0C = (1<<USBS0) | (1<<UCSZ01) | (1<<UCSZ00); // 2 stop bits, 8 data bits
     UCSR0B = (1<<RXEN0) | (1<<RXCIE0);               // enable transmit, receive and interrupts,
-    UBRR0  = (F_CPU / (DMX_BAUD * 16L) - 1);
+
+    UBRR0H = UBRRH_VALUE;
+    UBRR0L = UBRRL_VALUE;
+    
+//UBRR0  = (F_CPU / (DMX_BAUD * 16L) - 1);
+    //UBRR0 = ((F_CPU+DMX_BAUD*8)/(DMX_BAUD*16)-1);
+
  
     // INIT PORT PINS
     DDRB  = (1 << PIN0) | (1 << PIN1 ) | (1 << PIN2);
