@@ -48,22 +48,14 @@ ISR(USART_RX_vect){
         case SERIAL_DATA:
             PORTB &= ~0x01;
 
-            if(dmx_rx_cnt >= DMX_CHANNEL && dmx_rx_cnt <= (DMX_CHANNEL + DMX_NUM_CHANNELS + 1 )){
+            dmx_buf_back[dmx_rx_cnt+1] = tmp;
 
-
-                dmx_buf_back[dmx_rx_cnt - DMX_CHANNEL+1] = tmp;
-
-                // If we've reached all channels we need, mark current package as completed
-                if(dmx_rx_cnt == (DMX_CHANNEL + DMX_NUM_CHANNELS)) {
-                    dmx_rx_complete = 1;
-                }
+            if(dmx_rx_cnt == DMX_NUM_CHANNELS) {
+                dmx_rx_complete = 1;
+                stage = SERIAL_FLOOR;
             }
 
             dmx_rx_cnt++;
-
-            if(dmx_rx_cnt >= 512) {
-                stage = SERIAL_FLOOR;
-            }
 
             break;
 
