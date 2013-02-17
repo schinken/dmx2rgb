@@ -6,10 +6,8 @@
 #include <util/delay.h>
 #include <util/setbaud.h>
 
-volatile uint8_t dmx_rx_complete = 0x00;
 volatile uint8_t dmx_buf_back[DMX_NUM_CHANNELS + 2];
 
-uint8_t  dmx_valid = 0;
 uint16_t dmx_rx_cnt;    // 16-bit for 512 channels
 
 /*
@@ -50,7 +48,6 @@ ISR(USART_RX_vect){
             dmx_buf_back[dmx_rx_cnt+1] = tmp;
 
             if(dmx_rx_cnt == DMX_NUM_CHANNELS) {
-                dmx_rx_complete = 1;
                 stage = SERIAL_FLOOR;
             }
 
@@ -90,20 +87,23 @@ int main (void) {
     // Switch on third LED to display init
     PORTB &= ~0x04;
 
+    // Init led array
+    for(uint8_t i = 0; i < DMX_NUM_CHANNELS; i++){
+        dmx_buf_back[i] = 0x00;
+    }
+
     while(1) {  
 
-        if(dmx_rx_complete) {
-            uint8_t led = 0;
+        uint8_t led = 0;
 
-            for(led = 0; led < 16; led++) {
-                pca9685_led_pwm(PCA9685_CHIP_1, led_map[led], dmx_buf_back[led + 1]);
-            }
-            for(led = 0; led < 16; led++) {
-                pca9685_led_pwm(PCA9685_CHIP_2, led_map[led], dmx_buf_back[led + 1 + 16]);
-            }
-            for(led = 0; led < 16; led++) {
-                pca9685_led_pwm(PCA9685_CHIP_3, led_map[led], dmx_buf_back[led + 1 + 32]);
-            }
+        for(led = 0; led < 16; led++) {
+            pca9685_led_pwm(PCA9685_CHIP_1, led_map[led], dmx_buf_back[led + 1]);
+        }
+        for(led = 0; led < 16; led++) {
+            pca9685_led_pwm(PCA9685_CHIP_2, led_map[led], dmx_buf_back[led + 1 + 16]);
+        }
+        for(led = 0; led < 16; led++) {
+            pca9685_led_pwm(PCA9685_CHIP_3, led_map[led], dmx_buf_back[led + 1 + 32]);
         }
   
     }

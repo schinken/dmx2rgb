@@ -1,6 +1,6 @@
 
 #undef BAUD
-#define BAUD 230400
+#define BAUD 115200
 
 #define DMX_BUFFERS         2
 #define DMX_BUFFER_1        0
