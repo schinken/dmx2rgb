@@ -66,7 +66,7 @@ int main (void) {
 
 
     // INIT DMX
-    UCSR0C = (1<<USBS0) | (1<<UCSZ01) | (1<<UCSZ00); // 2 stop bits, 8 data bits
+    UCSR0C = (1<<UCSZ01) | (1<<UCSZ00); // 1 stop bits, 8 data bits
     UCSR0B = (1<<RXEN0) | (1<<RXCIE0);               // enable transmit, receive and interrupts,
 
     UBRR0H = UBRRH_VALUE;
