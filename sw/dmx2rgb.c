@@ -88,7 +88,8 @@ int main (void) {
     PORTB &= ~0x04;
 
     // Init led array
-    for(uint8_t i = 0; i < DMX_NUM_CHANNELS; i++){
+    uint8_t i = 0;
+    for(i = 0; i < DMX_NUM_CHANNELS; i++){
         dmx_buf_back[i] = 0x00;
     }
 
