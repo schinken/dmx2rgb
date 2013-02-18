@@ -47,8 +47,10 @@ ISR(USART_RX_vect){
 
             dmx_buf_back[dmx_rx_cnt+1] = tmp;
 
-            if(dmx_rx_cnt == DMX_NUM_CHANNELS) {
+            if(dmx_rx_cnt >= DMX_NUM_CHANNELS) {
                 stage = SERIAL_FLOOR;
+                dmx_rx_cnt = 0;
+                break;
             }
 
             dmx_rx_cnt++;
@@ -92,6 +94,7 @@ int main (void) {
     for(i = 0; i < DMX_NUM_CHANNELS; i++){
         dmx_buf_back[i] = 0x00;
     }
+
 
     while(1) {  
 
