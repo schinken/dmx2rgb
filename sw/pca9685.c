@@ -91,8 +91,6 @@ void pca9685_led_write(uint8_t i2c_addr, uint8_t led, uint16_t value) {
     i2c_start(i2c_addr + PCA9685_WRITE);
     i2c_write(PCA9685_LED0 + 4*led);
 
-    uint16_t phase = (PWM_MAX-value)-1;
-
 
     i2c_write(0x00);
     i2c_write(0x00);
