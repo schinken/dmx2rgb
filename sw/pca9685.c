@@ -59,7 +59,7 @@ void pca9685_init(uint8_t i2c_addr, uint8_t frequency) {
  * Switch LED On
  */
 
-inline void pca9685_led_on(uint8_t i2c_addr, uint8_t led) {
+void pca9685_led_on(uint8_t i2c_addr, uint8_t led) {
     pca9685_led_pwm(i2c_addr, led, 255);   
 }
 
@@ -67,7 +67,7 @@ inline void pca9685_led_on(uint8_t i2c_addr, uint8_t led) {
  * Switch LED Off
  */
 
-inline void pca9685_led_off(uint8_t i2c_addr, uint8_t led) {
+void pca9685_led_off(uint8_t i2c_addr, uint8_t led) {
     pca9685_led_pwm(i2c_addr, led, 0);  
 }
 
@@ -75,7 +75,7 @@ inline void pca9685_led_off(uint8_t i2c_addr, uint8_t led) {
  * Set LED with an intensity between 0 - 255
  */
 
-inline void pca9685_led_pwm(uint8_t i2c_addr, uint8_t led, uint8_t intensity) {
+void pca9685_led_pwm(uint8_t i2c_addr, uint8_t led, uint8_t intensity) {
     pca9685_led_write(i2c_addr, led, PWM_TO_CIEL(intensity));
 }
 
