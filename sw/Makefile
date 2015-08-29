@@ -50,6 +50,8 @@ MCU_TARGET     = atmega168
 #MCU_TARGET     = attiny861
 
 
+FUSES = lfuse:w:0xCE:m -U hfuse:w:0xDF:m -U efuse:w:0xF9:m
+
 #---------------- Programming Options (avrdude) ----------------
 
 # Programming hardware: alf avr910 avrisp bascom bsd 
@@ -58,7 +60,7 @@ MCU_TARGET     = atmega168
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = avrispmkII
+AVRDUDE_PROGRAMMER = usbasp
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
 #AVRDUDE_PORT = usb    # programmer connected to serial device
@@ -128,6 +130,8 @@ clean:
 program: $(PRG).hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
+fuse:
+	$(AVRDUDE) $(AVRDUDE_FLAGS) -v -v  -U $(FUSES)
 
 lst:  $(PRG).lst
 #elf: $(PRG).elf
